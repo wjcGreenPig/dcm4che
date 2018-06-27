@@ -81,6 +81,9 @@ import org.slf4j.LoggerFactory;
  */
 public class StoreSCP {
 
+    //changed
+    private int filecount =0;
+    
     private static final Logger LOG = LoggerFactory.getLogger(StoreSCP.class);
 
     private static ResourceBundle rb =
@@ -176,7 +179,13 @@ public class StoreSCP {
         return serviceRegistry;
     }
 
+    //changed
     public void setStorageDirectory(File storageDir) {
+        /**
+        if (storageDir != null)
+            storageDir.mkdirs();
+        this.storageDir = storageDir;
+        **/
         if (storageDir != null)
             storageDir.mkdirs();
         this.storageDir = storageDir;
