@@ -82,7 +82,8 @@ import org.slf4j.LoggerFactory;
 public class StoreSCP {
 
     //changed
-    private int filecount =0;
+    private int count=0;
+    private int current_step=1;
     
     private static final Logger LOG = LoggerFactory.getLogger(StoreSCP.class);
 
@@ -109,11 +110,23 @@ public class StoreSCP {
             String cuid = rq.getString(Tag.AffectedSOPClassUID);
             String iuid = rq.getString(Tag.AffectedSOPInstanceUID);
             String tsuid = pc.getTransferSyntax();
-            File file = new File(storageDir, iuid + PART_EXT);
+            
+            //changed
+            if (count==3999){
+                storageDir_real=storageDir+'/'+String.valueOf(current_step);
+                current_step+=1;
+                count=0;
+            }
+            
+            File file = new File(storageDir_real, iuid + PART_EXT);
             try {
                 storeTo(as, as.createFileMetaInformation(iuid, cuid, tsuid),
                         data, file);
-                renameTo(as, file, new File(storageDir,
+                
+                //changed
+                count+=1;
+                
+                renameTo(as, file, new File(storageDir_real,
                         filePathFormat == null
                             ? iuid
                             : filePathFormat.format(parse(file))));
