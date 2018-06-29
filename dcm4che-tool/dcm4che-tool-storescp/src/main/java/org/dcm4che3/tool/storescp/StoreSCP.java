@@ -181,11 +181,6 @@ public class StoreSCP {
 
     //changed
     public void setStorageDirectory(File storageDir) {
-        /**
-        if (storageDir != null)
-            storageDir.mkdirs();
-        this.storageDir = storageDir;
-        **/
         if (storageDir != null)
             storageDir.mkdirs();
         this.storageDir = storageDir;
