@@ -95,6 +95,10 @@ public class StoreSCP {
     private final ApplicationEntity ae = new ApplicationEntity("*");
     private final Connection conn = new Connection();
     private File storageDir;
+    
+    //changed
+    private File realDir;
+    
     private AttributesFormat filePathFormat;
     private int status;
     private final BasicCStoreSCP cstoreSCP = new BasicCStoreSCP("*") {
@@ -110,15 +114,16 @@ public class StoreSCP {
             String cuid = rq.getString(Tag.AffectedSOPClassUID);
             String iuid = rq.getString(Tag.AffectedSOPInstanceUID);
             String tsuid = pc.getTransferSyntax();
+          
             
             //changed
             if (count==3999){
-                storageDir_real=storageDir+'/'+String.valueOf(current_step);
+                realDir=new File(storageDir.getAbsolutePath()+'/'+String.valueOf(current_step));
                 current_step+=1;
                 count=0;
             }
             
-            File file = new File(storageDir_real, iuid + PART_EXT);
+            File file = new File(realDir, iuid + PART_EXT);
             try {
                 storeTo(as, as.createFileMetaInformation(iuid, cuid, tsuid),
                         data, file);
@@ -126,7 +131,7 @@ public class StoreSCP {
                 //changed
                 count+=1;
                 
-                renameTo(as, file, new File(storageDir_real,
+                renameTo(as, file, new File(realDir,
                         filePathFormat == null
                             ? iuid
                             : filePathFormat.format(parse(file))));
