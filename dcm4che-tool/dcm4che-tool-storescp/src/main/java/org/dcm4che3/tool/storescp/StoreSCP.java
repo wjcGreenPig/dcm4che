@@ -119,6 +119,8 @@ public class StoreSCP {
             //changed
             if (count==3999){
                 realDir=new File(storageDir.getAbsolutePath()+'/'+String.valueOf(current_step));
+                if (realDir != null)
+                    realDir.mkdirs();
                 current_step+=1;
                 count=0;
             }
@@ -196,8 +198,7 @@ public class StoreSCP {
         serviceRegistry.addDicomService(cstoreSCP);
         return serviceRegistry;
     }
-
-    //changed
+    
     public void setStorageDirectory(File storageDir) {
         if (storageDir != null)
             storageDir.mkdirs();
