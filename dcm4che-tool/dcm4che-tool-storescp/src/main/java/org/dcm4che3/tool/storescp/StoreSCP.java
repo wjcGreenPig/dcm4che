@@ -83,7 +83,7 @@ public class StoreSCP {
 
     //changed
     private int count=0;
-    private int current_step=1;
+    private int current_step=0;
     
     private static final Logger LOG = LoggerFactory.getLogger(StoreSCP.class);
 
@@ -117,15 +117,15 @@ public class StoreSCP {
           
             
             //changed
-            if (count==3999){
+            if (count==3000){ //threshold
+		current_step+=1;
                 realDir=new File(storageDir.getAbsolutePath()+'/'+String.valueOf(current_step));
                 if (realDir != null)
                     realDir.mkdirs();
-                current_step+=1;
                 count=0;
             }
             
-            File file = new File(realDir, iuid + PART_EXT);
+            File file = new File(realDir, iuid + PART_EXT); //
             try {
                 storeTo(as, as.createFileMetaInformation(iuid, cuid, tsuid),
                         data, file);
@@ -133,10 +133,15 @@ public class StoreSCP {
                 //changed
                 count+=1;
                 
-                renameTo(as, file, new File(realDir,
+                renameTo(as, file, new File(realDir, //
                         filePathFormat == null
                             ? iuid
                             : filePathFormat.format(parse(file))));
+		//System.out.println("&*&*&*&*&*&*&*&*&*&*&*&*&");
+		//System.out.println(count);
+		//System.out.println(current_step);
+                //System.out.println(realDir.getAbsolutePath());
+
             } catch (Exception e) {
                 deleteFile(as, file);
                 throw new DicomServiceException(Status.ProcessingFailure, e);
@@ -203,6 +208,10 @@ public class StoreSCP {
         if (storageDir != null)
             storageDir.mkdirs();
         this.storageDir = storageDir;
+	//changed
+	realDir=new File(this.storageDir.getAbsolutePath()+'/'+String.valueOf(current_step));
+	if (realDir != null)
+            realDir.mkdirs();
     }
 
     public void setStorageFilePathFormat(String pattern) {
